@@ -70,7 +70,6 @@ Overprivileged accounts are a classic threat vector in cloud security. Terraform
 }
 ```
 
-
 ## Examples
 
 Each of these examples is meant to mimic a full repo. Unfortunately I have seen these exact things  repeatedly when I was doing DevOps consulting. 
