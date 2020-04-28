@@ -1,10 +1,30 @@
 # You Made It
 
+## Environments
+
+* `admin`
+* `staging` 
+* `prod`
+
 ## Components
 
-* route53 - route53 zones and records
+* `route53` - route53 zones and records
 
-* frontend - s3 and cloudfront distributions, plus IAM
+* `frontend` - s3 and cloudfront distributions, plus IAM
 
 ## Usage
-`./run.sh (module name) (environment) (plan|apply)`
+`./run.sh (cloud) (region) (environment) (component name) (plan|apply)`
+
+## Structure
+
+```text
+├── $CLOUD
+│   └── $REGION       
+│       └── $ENVIRONMENT
+│           └── $COMPONENT
+├── modules
+│   └── $CLOUD
+│       └── $MODULE
+├── readme.md
+└── run.sh
+```

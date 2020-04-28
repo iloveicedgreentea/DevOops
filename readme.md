@@ -39,7 +39,8 @@ Overprivileged accounts are a classic threat vector in cloud security. Terraform
 
 * Similarly, restrict access to the state file on an as needed basis. A developer IAM role should not access the production state file. This will prevent both accidental issues and malicious actions.
 
-* If using CI/CD, make sure the role is both scoped and secured with conditions such as mandating an IP range
+* If using CI/CD, make sure the role policy is tightly scoped and the AssumeRole policy has conditions such as mandating an IP range.
+
 ```json
 {
   "Version": "2012-10-17",
@@ -70,21 +71,26 @@ Overprivileged accounts are a classic threat vector in cloud security. Terraform
 }
 ```
 
-## Examples
+## Terraform Examples
 
-Each of these examples is meant to mimic a full repo. Unfortunately I have seen these exact things  repeatedly when I was doing DevOps consulting. 
+Each of these examples is meant to mimic a full repo. Unfortunately I have seen these exact things many times when I was doing DevOps consulting. 
 
 ### Worst Case Scenario
+
 This is the worst possible example of Terraform. Issues with this repo include not having a backend, having all resources in one file, not using modules, not having config files, and not having any automation. Possibly worst of all, a Readme is missing too. 
 
 Some consequences of this kind of configuration include:
 
+* No remote backend
+  * Relying on git will eventually cause merge conflicts
+  * No state locking can create inconsistent runs
+
 * Single state file
-  * State file corruption, loss, or out of band editing is catastrophic
+  * State file corruption, loss, or out of band editing is catastrophic. Can be mitigated with git, but not ideal
   * Locking will slow down development for different components or business units
   * State file rollbacks will affect all resources
 
-* Spaghetti configs
+* Spaghetti
   * Not having configs/variables means declaring multiple sets of resources for environments
   * Hard to read
   * Less operator friendly (can't pass off the module to less experienced people)
@@ -92,17 +98,13 @@ Some consequences of this kind of configuration include:
 * Not reusable
   * Any new resources will need to be added to this file instead of instantiating a new module with a different state file
 
-* No remote backend
-  * Relying on git will cause conflicts
-  * No state locking will create inconsistent runs
-
 ### Less Bad
 This example has configs, a remote backend, and some separation, but is still not reusable. 
 
 Some consequences of this kind of configuration include:
 
 * Single state file
-  * State file corruption, loss, or out of band editing is catastrophic
+  * State file corruption, loss, or out of band editing is catastrophic. Can be mitigated with git, but not ideal
   * Locking will slow down development for different components or business units
   * State file rollbacks will affect all resources
 
@@ -110,7 +112,7 @@ Some consequences of this kind of configuration include:
   * Any new resources will need to be added to this file instead of instantiating a new module with a different state file
 
 ### Almost Great
-This example has configs, a remote backend, separate files, and reusable modules. It needs some work to automate running it since the configs and modules are in separate directories. It is a PIA to run this each time:
+This example has configs, a remote backend, separate files, and reusable modules. It has some basic automation which would otherwise require a lot of typing:
 
 ```
 terraform init \
@@ -130,5 +132,14 @@ terraform apply \
     ./frontend.plan
 ```
 
+Additionally, there is no region or multi-cloud support.
+
 ### You Made It
-This example has all of the good principles and also has automation to simplify and speed up running Terraform. You can put this in a CI/CD pipeline or run it locally. 
+This example has all of the good principles and also has multi-region, multi-cloud support with full automation to simplify and speed up running Terraform. You can put this in a CI/CD pipeline or run it locally. 
+
+Each item under `/$cloud/$region/$environment` is called a `component`. This component can be anything that fits into a Terraform module such as a staging RDS database or a module that creates an S3 bucket, a Cloudfront distribution, and some R53 records.
+
+This example supports arbitrary clouds, environments, regions, and modules. It will handle `init` per component, have separate `state` per component, and handle `plan` and `apply` programmatically. It can easily be extended to support any other functionality.
+
+The readme discusses the modules and environments that exist in the repo and it explains how to use the script.
+
