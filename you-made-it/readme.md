@@ -6,11 +6,11 @@
 * `staging` 
 * `prod`
 
-## Components
+## modules
 
-* `route53` - route53 zones and records
-
-* `frontend` - s3 and cloudfront distributions, plus IAM
+* `aws`
+  * `route53` - route53 zones and records
+  * `frontend` - s3 and cloudfront distributions, plus IAM
 
 ## Usage
 `./run.sh (cloud) (region) (environment) (component name) (plan|apply)`
