@@ -83,14 +83,14 @@ Click on Create Policy and use the visual editor. Swap between JSON view to cust
 
 ## Terraform Examples
 
-Each of these examples is meant to mimic a full repo. Unfortunately I have seen these exact things many times when I was doing DevOps consulting. 
+Each of these examples mimics a standalone repo. They are based on things I have seen many times when I was doing DevOps consulting. 
 
 ### Worst Case Scenario
 [Example One](1.worst-case-scenario)
 
-This is the worst possible example of Terraform. Issues with this repo include not having a backend, having all resources in one file, not using modules, not having config files, and not having any automation. Possibly worst of all, a Readme is missing too. 
+This is basically the worst possible example of Terraform code. Issues with this repo include not having a backend, having all resources in one file, not using modules, not having config files, and not having any automation. Worst of all, it is missing a readme.
 
-Some consequences of this kind of configuration include:
+Some issues with this kind of configuration include:
 
 * No remote backend
   * Relying on git will eventually cause merge conflicts
@@ -110,9 +110,11 @@ Some consequences of this kind of configuration include:
   * Any new resources will need to be added to this file instead of instantiating a new module with a different state file
 
 ### Less Bad
+[Example Two](2.less-bad)
+
 This example has configs, a remote backend, and some separation, but is still not reusable. 
 
-Some consequences of this kind of configuration include:
+Some issues with this kind of configuration include:
 
 * Single state file
   * State file corruption, loss, or out of band editing is catastrophic. Can be mitigated with git, but not ideal
@@ -123,6 +125,8 @@ Some consequences of this kind of configuration include:
   * Any new resources will need to be added to this file instead of instantiating a new module with a different state file
 
 ### Almost Great
+[Example Three](3.almost-great)
+
 This example has configs, a remote backend, separate files, and reusable modules. It has some basic automation which would otherwise require a lot of typing:
 
 ```
@@ -146,6 +150,8 @@ terraform apply \
 Additionally, there is no region or multi-cloud support.
 
 ### You Made It
+[Example Four](4.you-made-it)
+
 This example has all of the good principles and also has multi-region, multi-cloud support with full automation to simplify and speed up running Terraform. You can put this in a CI/CD pipeline or run it locally. 
 
 Each item under `/$cloud/$region/$environment` is called a `component`. This component can be anything that fits into a Terraform module such as a staging RDS database or a module that creates an S3 bucket, a Cloudfront distribution, and some R53 records.
