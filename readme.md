@@ -13,7 +13,7 @@ Good and bad examples of how to Terraform
   * Use built in mechanisms like environment variables, path to credentials file, etc
 
 * Configs separate from code
-  * Anything that is a parameter should be a declared variable, not hardcoded in your `.tf` files. 
+  * Anything that is a parameter should be a declared variable, not hard coded in your `.tf` files. 
   * Resources with unique name constraints should be scoped to an environment.
 
 * File separation
@@ -90,7 +90,7 @@ Click on Create Policy and use the visual editor. Swap between JSON view to cust
 Each of these examples mimics a standalone repo. They are based on things I have seen many times when I was doing DevOps consulting. 
 
 ### Worst Case Scenario
-[Example One](1.worst-case-scenario)
+[Example One](1.worst-case-scenario/main.tf)
 
 This is basically the worst possible example of Terraform code. Issues with this repo include not having a backend, having all resources in one file, not using modules, not having config files, and not having any automation. Worst of all, it is missing a readme.
 
@@ -114,7 +114,7 @@ Some issues with this kind of configuration include:
   * Any new resources will need to be added to this file instead of instantiating a new module with a different state file
 
 ### Less Bad
-[Example Two](2.less-bad)
+[Example Two](2.less-bad/readme.md)
 
 This example has configs, a remote backend, and some separation, but is still not reusable. 
 
@@ -129,7 +129,7 @@ Some issues with this kind of configuration include:
   * Any new resources will need to be added to this file instead of instantiating a new module with a different state file
 
 ### Almost Great
-[Example Three](3.almost-great)
+[Example Three](3.almost-great/readme.md)
 
 This example has configs, a remote backend, separate files, and reusable modules. It has some basic automation which would otherwise require a lot of typing:
 
@@ -154,7 +154,7 @@ terraform apply \
 However, there is no region or multi-cloud support.
 
 ### You Made It
-[Example Four](4.you-made-it)
+[Example Four](4.you-made-it/readme.md)
 
 This example has all of the good principles and also has multi-region, multi-cloud support with full automation to simplify and speed up running Terraform. You can put this in a CI/CD pipeline or run it locally. 
 
