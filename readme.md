@@ -2,23 +2,27 @@
 
 Good and bad examples of how to Terraform
 
-## Principles of good Terraform
+## Principles of Good Terraform
 
 * Remote backend with state locking
   * You should use a remote backend like S3 + DynamoDB which supports state locking
+  * Enable versioning
 
 * Credentials separate from code
   * Don't put credentials in your provider config
   * Use built in mechanisms like environment variables, path to credentials file, etc
 
 * Configs separate from code
-  * Anything that is a parameter should be a declared variable, not hardcoded in your `.tf` files. Resources with unique name constraints should be scoped to an environment.
+  * Anything that is a parameter should be a declared variable, not hardcoded in your `.tf` files. 
+  * Resources with unique name constraints should be scoped to an environment.
 
 * File separation
-  * Resources should be grouped in files where it makes sense; don't put everything in a main.tf. Terraform will flatten it for you but having things logically separated will 
+  * Resources should be grouped in files where it makes sense; don't put everything in a main.tf. 
+    * Terraform will flatten it for you but having things logically separated will 
 
 * Reuseable Modules
-  * Resources for a use case should be self contained in a Terraform Module and they should be reusable. Examples of self contained use cases include an application, a reusable database component, or a Jenkins server deployment.
+  * Resources for a use case should be self contained in a Terraform Module and they should be reusable. 
+    * Examples of self contained use cases include an application, a reusable database component, or a Jenkins server deployment.
   * Nesting modules is okay when it can logically separate resources
 
 * Decoupled resources
@@ -121,7 +125,7 @@ Some issues with this kind of configuration include:
   * Locking will slow down development for different components or business units
   * State file rollbacks will affect all resources
 
-* Not reusable
+* Not super reusable
   * Any new resources will need to be added to this file instead of instantiating a new module with a different state file
 
 ### Almost Great
@@ -147,7 +151,7 @@ terraform apply \
     ./frontend.plan
 ```
 
-Additionally, there is no region or multi-cloud support.
+However, there is no region or multi-cloud support.
 
 ### You Made It
 [Example Four](4.you-made-it)

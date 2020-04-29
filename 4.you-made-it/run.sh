@@ -65,5 +65,6 @@ fi
 # Apply
 if [[ "$action" == "apply" ]]; then
   tf_plan
+  # Can add confirmation dialog here if you want
   tf_apply
 fi
