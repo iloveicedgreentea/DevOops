@@ -1,6 +1,6 @@
 # DevOops: Bad Terraform
 
-Intentionally bad examples of how to not do Terraform, with one good example.
+Good and bad examples of how to Terraform
 
 ## Principles of good Terraform
 
@@ -71,11 +71,22 @@ Overprivileged accounts are a classic threat vector in cloud security. Terraform
 }
 ```
 
+Use the IAM policy creation wizard to save time and validate the template
+
+Open IAM in the console, click on Policies:
+
+![alt text](slides/1.png "Open IAM in the console, click on Policies")
+
+Click on Create Policy and use the visual editor. Swap between JSON view to customize or copy it:
+
+![alt text](slides/2.png "Click on Create Policy and use the visual editor. Swap between JSON view to customize or copy it")
+
 ## Terraform Examples
 
 Each of these examples is meant to mimic a full repo. Unfortunately I have seen these exact things many times when I was doing DevOps consulting. 
 
 ### Worst Case Scenario
+[Example One](1.worst-case-scenario)
 
 This is the worst possible example of Terraform. Issues with this repo include not having a backend, having all resources in one file, not using modules, not having config files, and not having any automation. Possibly worst of all, a Readme is missing too. 
 
