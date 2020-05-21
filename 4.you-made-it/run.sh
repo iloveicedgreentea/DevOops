@@ -1,5 +1,6 @@
 #!/bin/bash
-set -e
+
+export TF_IN_AUTOMATION=1
 
 ################
 # Params
@@ -12,12 +13,6 @@ component=$4
 action=$5
 
 ################
-# Validation
-################
-
-# Various validation tasks left as exercise to the reader (are the dirs present, valid? All params provided?)
-
-################
 # Dirs
 ################
 
@@ -27,22 +22,42 @@ module_dir="$PWD/modules/${cloud}/${module}"
 out_plan="${module_dir}/terraform.tfplan"
 
 ################
+# Validation
+################
+
+# You can put whatever validation you want here
+
+# Check if positional arguments are present instead of a condition for each argument
+# map an array of commands to the position, return error back to user
+arguments=("cloud" "region" "environment" "component" "action")
+i=1
+while [ $i -lt 6 ]; do
+  if [[ -z "${!i}" ]]; then # use variable indirection to construct the actual positional variable
+    echo "Argument not provided: \$$i - ${arguments[$i-1]}"
+    exit 1
+  fi
+  i=$((i+1))
+done
+
+if [[ ! -f $out_plan ]] && [[ $action == "apply" ]]; then
+  echo "terraform.tfplan not found. Please run a plan before applying"
+  exit 1
+fi
+
+# check if the module file is present
+if [[ -z $module ]]; then
+  echo "module file is missing from config"
+  exit 1
+fi
+
+################
 # Functions
 ################
 
-function tf_plan() {
-  terraform plan \
-    -var-file="${config_dir}/terraform.tfvars" \
-    -out="${out_plan}" \
-    -input=false \
-    "${module_dir}"
-}
-
-function tf_apply() {
-  terraform apply \
-        -input=false \
-        "${out_plan}"
-}
+# You can set predefined flags to each command to keep things even more DRY
+export TF_CLI_ARGS_init="-backend-config=${config_dir}/backend.tfvars -input=false -reconfigure ${module_dir}"
+export TF_CLI_ARGS_plan="-var-file=${config_dir}/terraform.tfvars -out=${out_plan} -input=false ${module_dir}"
+export TF_CLI_ARGS_apply="-input=false ${out_plan}"
 
 # can implement other functions like import, refresh, destroy, etc
 
@@ -51,20 +66,7 @@ function tf_apply() {
 ################
 
 # Init inside the module dir
-terraform init \
-  -backend-config="${config_dir}/backend.tfvars" \
-  -input=false \
-  -reconfigure \
-  "${module_dir}"
+terraform init
 
-# Plan
-if [[ "$action" == "plan" ]]; then
-  tf_plan
-fi
-
-# Apply
-if [[ "$action" == "apply" ]]; then
-  tf_plan
-  # Can add confirmation dialog here if you want
-  tf_apply
-fi
+# Run terraform
+terraform "$action"
